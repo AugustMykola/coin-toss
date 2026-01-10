@@ -3,12 +3,14 @@ import './styles.css';
 import { store } from "./core/store/store.ts";
 import { TossScene } from "./core/pixi/TossScene.ts";
 import {CoinAnimationService} from "./core/services/CoinAnimationService.ts";
-import {tossCoin} from "./core/store/toss.effects..ts";
+import {tossCoin} from "./core/store/toss.effects.ts";
 import {CoinSide} from "./shared/enums/coin-side.ts";
 import {thunkServices} from "./core/store/thunk-extras.ts";
-
+import {ResultMessage} from "./core/pixi/ResultMessage.ts";
+import {selectTossMessage} from "./core/store/toss.selectors.ts";
 
 export let animationService: CoinAnimationService;
+export let resultMessage: ResultMessage;
 
 (async () => {
     const app = new Application();
@@ -26,8 +28,22 @@ export let animationService: CoinAnimationService;
         container.appendChild(app.canvas);
     } else {
         document.body.appendChild(app.canvas);
-        console.warn('pixi-container not found, appending to body');
     }
+
+    resultMessage = new ResultMessage();
+
+    let currentMessage: string | null = null;
+    store.subscribe(() => {
+        const state = store.getState();
+        const newMessage = selectTossMessage(state);
+        console.log(newMessage);
+
+        if (newMessage && newMessage !== currentMessage) {
+            resultMessage.show(newMessage);
+        }
+        currentMessage = newMessage;
+    });
+
 
     const gameScene = new TossScene(app);
     await gameScene.init();
@@ -39,17 +55,11 @@ export let animationService: CoinAnimationService;
     const btnTails = document.getElementById('btn-tails');
 
     btnHeads?.addEventListener('click', () => {
-        console.log('Heads clicked');
-        // Спочатку скидаємо, якщо потрібно, або одразу запускаємо підкидання
-        // tossStore.dispatch(resetToss());
         store.dispatch(tossCoin(CoinSide.Heads));
     });
 
     btnTails?.addEventListener('click', () => {
-        console.log('Tails clicked');
-        // tossStore.dispatch(resetToss());
         store.dispatch(tossCoin(CoinSide.Tails));
     });
-
 
 })();

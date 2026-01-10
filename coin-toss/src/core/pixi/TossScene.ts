@@ -15,8 +15,6 @@ export class TossScene {
     }
 
     public async init() {
-
-
         this.setupScene();
         this.setupTicker();
     }
@@ -24,15 +22,18 @@ export class TossScene {
     private setupScene() {
         this.coin.x = this.app.screen.width / 2;
         this.coin.y = this.app.screen.height / 2;
-
         this.app.stage.addChild(this.coin);
 
-
         window.addEventListener('resize', () => {
-            this.coin.x = this.app.screen.width / 2;
-            this.coin.y = this.app.screen.height / 2;
+            const width = this.app.screen.width;
+            const height = this.app.screen.height;
+
+            this.coin.x = width / 2;
+            this.coin.y = height / 2;
+
         });
     }
+
 
     private setupTicker() {
         this.app.ticker.add((ticker) => {

@@ -8,9 +8,7 @@ export class CoinAnimationService {
         this.scene = scene;
     }
 
-
     public startSpinning(): void {
-        console.log('Spinning...');
         this.scene.spinCoin();
     }
 

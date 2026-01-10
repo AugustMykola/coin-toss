@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {resetToss} from "./toss.actions.ts";
 import {initialState} from "./toss.state.ts";
-import {tossCoin} from "./toss.effects..ts";
+import {tossCoin} from "./toss.effects.ts";
 
 
 export const tossReducer = createReducer(initialState, (builder) => {
@@ -27,7 +27,6 @@ export const tossReducer = createReducer(initialState, (builder) => {
         })
         .addCase(tossCoin.fulfilled, (state, { payload }) => {
             const isWin = payload.prediction === payload.apiResult;
-            console.log(payload.prediction, payload.apiResult, isWin);
             return {
                 ...state,
                 state: 'display_result',
