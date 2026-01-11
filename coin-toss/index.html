@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coin Toss</title>
+  <title>Coin Toss Game</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="game-wrapper">
+  <div id="pixi-container"></div>
+
+  <div id="ui">
+    <h1 id="message">Choose a side:</h1>
+    <div id="buttons">
+      <button id="btn-heads" class="game-btn">HEADS</button>
+      <button id="btn-tails" class="game-btn">TAILS</button>
+    </div>
+  </div>
+</div>
 <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

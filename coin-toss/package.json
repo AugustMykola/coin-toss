@@ -13,6 +13,8 @@
     "vite": "^7.2.4"
   },
   "dependencies": {
-    "pixi.js": "^8.15.0"
+    "@reduxjs/toolkit": "^2.11.2",
+    "pixi.js": "^8.15.0",
+    "rxjs": "^7.8.0"
   }
 }
