@@ -155,6 +155,34 @@ body {
   background: linear-gradient(135deg, rgba(251,113,133,0.22), rgba(167,139,250,0.14));
 }
 
+/* Disabled button styles + spinner */
+.game-btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.62;
+  filter: grayscale(0.18) brightness(0.92);
+  transform: translateY(0) !important;
+  box-shadow: none;
+  border-color: rgba(255,255,255,0.08);
+}
+
+.game-btn[disabled]::after {
+  content: "";
+  display: inline-block;
+  margin-left: 10px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-top-color: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: btn-spin 0.9s linear infinite;
+}
+
+@keyframes btn-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .hidden {
   display: none !important;
 }

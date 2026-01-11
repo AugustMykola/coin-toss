@@ -1,12 +1,16 @@
-import type {ITossResult} from "../../shared/models/ITossResult.ts";
-import {CoinSide} from "../../shared/enums/coin-side.ts";
+import { defer, map, timer } from 'rxjs';
+import type { Observable } from 'rxjs';
 
-export const getTossResult = (): Promise<ITossResult> => {
-    return new Promise((resolve) => {
-        const delay: number = Math.floor(Math.random() * 1000) + 1;
+import type { ITossResult } from '../../shared/models/ITossResult';
+import { CoinSide } from '../../shared/enums/coin-side';
 
-        setTimeout(() => resolve(
-            {tossResult: Math.random() > 0.5 ? CoinSide.Heads : CoinSide.Tails}
-        ), delay);
-    })
-}
+export const getTossResult$ = (): Observable<ITossResult> =>
+  defer(() => {
+    const delayMs = Math.floor(Math.random() * 1000) + 1;
+
+    return timer(delayMs).pipe(
+      map(() => ({
+        tossResult: Math.random() > 0.5 ? CoinSide.Heads : CoinSide.Tails,
+      })),
+    );
+  });

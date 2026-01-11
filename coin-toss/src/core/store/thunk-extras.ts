@@ -1,17 +1,15 @@
-import {getTossResult} from "../api/coin-toss-api.ts";
-import {CoinAnimationService} from "../services/CoinAnimationService.ts";
-import type {ITossResult} from "../../shared/models/ITossResult.ts";
+import { getTossResult$ } from "../api/coin-toss-api";
+import type { Observable } from 'rxjs';
+import type {ITossResult} from "../../shared/models/ITossResult";
 
 export interface ThunkServices {
     api: {
-        getTossResult: () => Promise<ITossResult>;
+        getTossResult$: () => Observable<ITossResult>;
     };
-    animationService?: CoinAnimationService;
 }
 
 export const thunkServices: ThunkServices = {
     api: {
-        getTossResult
-    },
-    animationService: undefined
+        getTossResult$: getTossResult$
+    }
 };

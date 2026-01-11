@@ -1,7 +1,7 @@
 import { Application } from 'pixi.js';
 import { Coin } from "./Coin";
 import { CoinAnimator } from "./CoinAnimator";
-import type {CoinSide} from "../../shared/enums/coin-side.ts";
+import type {CoinSide} from "../../shared/enums/coin-side";
 
 export class TossScene {
     private app: Application;
@@ -33,7 +33,6 @@ export class TossScene {
 
         });
     }
-
 
     private setupTicker() {
         this.app.ticker.add((ticker) => {

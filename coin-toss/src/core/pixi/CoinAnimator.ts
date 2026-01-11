@@ -1,5 +1,5 @@
-import type {Coin} from "./Coin.ts";
-import {CoinSide} from "../../shared/enums/coin-side.ts";
+import type {Coin} from "./Coin";
+import {CoinSide} from "../../shared/enums/coin-side";
 
 export class CoinAnimator {
     private coin: Coin;
@@ -7,8 +7,8 @@ export class CoinAnimator {
     private duration: number = 2000;
     private elapsed: number = 0;
     private startY: number = 0;
-    private jumpHeight: number = 300;
-    private totalSpins: number = 10;
+    private jumpHeight: number = 200;
+    private totalSpins: number = 7;
 
     private targetSide: CoinSide | null = null;
     private onStopCallback: (() => void) | null = null;
@@ -28,6 +28,12 @@ export class CoinAnimator {
     }
 
     public stopSpin(result: CoinSide, onStop: () => void) {
+        if (!this.isAnimating) {
+            this.coin.draw(result, 1);
+            onStop();
+            return;
+        }
+
         this.targetSide = result;
         this.onStopCallback = onStop;
     }

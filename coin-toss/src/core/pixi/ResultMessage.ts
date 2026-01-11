@@ -7,7 +7,7 @@ export class ResultMessage {
         this.container = document.createElement('div');
         this.container.className = 'popup-message';
 
-        this.textElement = document.createElement('h1');
+        this.textElement = document.createElement('h3');
         this.textElement.className = 'popup-text';
 
         this.container.appendChild(this.textElement);
@@ -36,10 +36,14 @@ export class ResultMessage {
         this.timeoutId = setTimeout(() => {
             this.hide();
         }, 2000);
+        
+        document.dispatchEvent(new CustomEvent('result:show', { detail: { message } }));
+
     }
 
     private hide(): void {
         this.container.classList.remove('visible');
         this.timeoutId = null;
+        document.dispatchEvent(new CustomEvent('result:hide'));
     }
 }

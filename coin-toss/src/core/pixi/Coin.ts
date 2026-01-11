@@ -4,7 +4,7 @@ import { CoinSide } from '../../shared/enums/coin-side';
 export class Coin extends Container {
     private graphics: Graphics;
     private readonly radius: number = 60;
-    private readonly thickness: number = 10; // Товщина монети для 2.5D ефекту
+    private readonly thickness: number = 7;
 
     constructor() {
         super();

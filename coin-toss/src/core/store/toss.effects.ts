@@ -1,27 +1,29 @@
+import { filter, switchMap, mergeMap, catchError, map } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { actionBus } from '../services/action-bus';
+import { getTossResult$ } from '../api/coin-toss-api';
+import { tossRequested, tossSucceeded, tossFailed } from './toss.actions';
+import { serviceContainer } from '../services/service-container';
+import { store } from './store';
 
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import type {CoinSide} from "../../shared/enums/coin-side.ts";
-import type {ThunkServices} from "./thunk-extras.ts"; // Імпорт типу
-
-export const tossCoin = createAsyncThunk<
-    { apiResult: CoinSide, prediction: CoinSide },
-    CoinSide,
-    { extra: ThunkServices }
->(
-    'toss/spin',
-    async (prediction, { extra }) => {
-
-        if (!extra || !extra.animationService) {
-            throw new Error('Animation service not initialized');
-        }
-        console.log('Spinning coin...');
-        extra.animationService.startSpinning();
-
-        const response = await extra.api.getTossResult();
-        console.log('API response:', response);
-
-        await extra.animationService.stopSpinning(response.tossResult);
-
-        return { apiResult: response.tossResult, prediction };
+actionBus.pipe(
+  filter((action) => action && action.type === tossRequested.type),
+  switchMap((action) => {
+    const prediction = action.payload;
+    const animationService = serviceContainer.getAnimationService();
+    if (!animationService) {
+      return of(tossFailed('Animation service not initialized'));
     }
-);
+
+    animationService.startSpinning();
+
+    return getTossResult$().pipe(
+      mergeMap((response) =>
+        from(animationService.stopSpinning(response.tossResult)).pipe(
+          map(() => tossSucceeded(response.tossResult, prediction))
+        )
+      ),
+      catchError((err) => of(tossFailed(err?.message || 'Unknown error')))
+    );
+  })
+).subscribe((action) => store.dispatch(action));

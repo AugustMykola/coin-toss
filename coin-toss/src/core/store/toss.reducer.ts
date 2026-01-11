@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {resetToss} from "./toss.actions.ts";
-import {initialState} from "./toss.state.ts";
-import {tossCoin} from "./toss.effects.ts";
+import {resetToss, startAnimation, stopAnimation, tossRequested, tossSucceeded, tossFailed} from "./toss.actions";
+import {initialState} from "./toss.state";
+import { MESSAGES } from "../i18n/messages";
 
 
 export const tossReducer = createReducer(initialState, (builder) => {
@@ -15,30 +15,41 @@ export const tossReducer = createReducer(initialState, (builder) => {
                 message: null
             };
         })
-        .addCase(tossCoin.pending, (state, { meta: { arg } }) => {
-            console.log(arg);
+        .addCase(tossRequested, (state, { payload: prediction }) => {
             return {
                 ...state,
                 state: 'spinning',
-                prediction: arg,
+                prediction: prediction,
                 result: null,
                 message: null
             };
         })
-        .addCase(tossCoin.fulfilled, (state, { payload }) => {
+        .addCase(startAnimation, (state) => {
+            return {
+                ...state,
+                isAnimating: true
+            };
+        })
+        .addCase(stopAnimation, (state) => {
+            return {
+                ...state,
+                isAnimating: false
+            };
+        })
+        .addCase(tossSucceeded, (state, { payload }) => {
             const isWin = payload.prediction === payload.apiResult;
             return {
                 ...state,
                 state: 'display_result',
                 result: payload.apiResult,
-                message: isWin ? 'You won!' : 'You lost!'
+                message: isWin ? MESSAGES.WIN : MESSAGES.LOSE
             };
         })
-        .addCase(tossCoin.rejected, (state, action) => {
+        .addCase(tossFailed, (state, action) => {
             return {
                 ...state,
                 state: 'idle',
-                message: action.error.message || 'Error occurred'
+                message: action.payload || MESSAGES.ERROR_OCCURRED
             };
         });
 });
